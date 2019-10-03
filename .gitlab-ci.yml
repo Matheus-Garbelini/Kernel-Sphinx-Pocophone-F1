@@ -1,0 +1,16 @@
+cache:
+  key: ${CI_COMMIT_REF_SLUG}
+  paths:
+    - toolchain/
+
+build_kernel:
+  tags:
+    - linux
+  before_script:
+  - git submodule sync --recursive
+  - git submodule update --init --recursive
+  script:
+  - cp defconfig .config
+  - ./build.sh
+  - cd output
+  - ghr -t $GITHUB_TOKEN_2 -u $GITHUB_USERNAME -r $CI_PROJECT_NAME -c $CI_COMMIT_SHA -delete 4.9.194 ./pocophone_kernel.zip 
